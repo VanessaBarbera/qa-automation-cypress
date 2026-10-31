@@ -48,6 +48,19 @@ jobs:
             echo 'Nenhum relatório JSON foi gerado.'
           fi
 
+      - name: Criar ZIP de entrega (somente o projeto)
+        if: always()
+        run: git archive --format=zip --output=automation-exercise-entrega.zip HEAD:automation-exercise
+
+      - name: Disponibilizar ZIP para entrega
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: entrega-automation-exercise
+          path: automation-exercise/automation-exercise-entrega.zip
+          if-no-files-found: error
+          retention-days: 14
+
       - name: Publicar relatórios, screenshots e vídeos
         if: always()
         uses: actions/upload-artifact@v4
