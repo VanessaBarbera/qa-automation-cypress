@@ -1,0 +1,8 @@
+node_modules/
+cypress/results/
+cypress/html-report/
+cypress/merged-report.json
+cypress/screenshots/
+cypress/videos/
+.DS_Store
+.env

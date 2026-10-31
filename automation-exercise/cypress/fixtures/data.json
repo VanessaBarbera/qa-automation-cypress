@@ -1,0 +1,12 @@
+{
+  "searchProduct": "Blue Top",
+  "invalidPassword": "senha_que_nao_existe_12345",
+  "card": {
+    "name": "QA Automation Test",
+    "number": "4111111111111111",
+    "cvc": "123",
+    "month": "12",
+    "year": "2030"
+  },
+  "orderComment": "Compra automatizada para validacao do fluxo de checkout."
+}

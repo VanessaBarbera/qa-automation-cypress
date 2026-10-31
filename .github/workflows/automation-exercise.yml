@@ -1,0 +1,76 @@
+name: Automation Exercise - 10 casos E2E
+
+on:
+  push:
+    branches:
+      - main
+      - 'feature/automation-exercise-*'
+    paths:
+      - 'automation-exercise/**'
+      - '.github/workflows/automation-exercise.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'automation-exercise/**'
+      - '.github/workflows/automation-exercise.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  e2e:
+    name: Cypress Chrome / 10 casos
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    defaults:
+      run:
+        working-directory: automation-exercise
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Instalar dependências
+        run: npm install --no-audit --no-fund
+
+      - name: Executar testes Cypress no Chrome
+        run: npm test
+
+      - name: Gerar relatório HTML (mesmo se houver falhas)
+        if: always()
+        run: |
+          if compgen -G 'cypress/results/*.json' > /dev/null; then
+            npm run report
+          else
+            echo 'Nenhum relatório JSON foi gerado.'
+          fi
+
+      - name: Criar ZIP de entrega (somente o projeto)
+        if: always()
+        run: git -C .. archive --format=zip --output=automation-exercise/automation-exercise-entrega.zip HEAD:automation-exercise
+
+      - name: Disponibilizar ZIP para entrega
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: entrega-automation-exercise
+          path: automation-exercise/automation-exercise-entrega.zip
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Publicar relatórios, screenshots e vídeos
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: automation-exercise-report
+          path: |
+            automation-exercise/cypress/results/
+            automation-exercise/cypress/merged-report.json
+            automation-exercise/cypress/html-report/
+            automation-exercise/cypress/screenshots/
+            automation-exercise/cypress/videos/
+          if-no-files-found: warn
+          retention-days: 14
