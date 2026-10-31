@@ -50,7 +50,7 @@ jobs:
 
       - name: Criar ZIP de entrega (somente o projeto)
         if: always()
-        run: git archive --format=zip --output=automation-exercise-entrega.zip HEAD:automation-exercise
+        run: git -C .. archive --format=zip --output=automation-exercise/automation-exercise-entrega.zip HEAD:automation-exercise
 
       - name: Disponibilizar ZIP para entrega
         if: always()
